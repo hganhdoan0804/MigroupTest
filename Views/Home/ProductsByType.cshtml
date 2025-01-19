@@ -1,0 +1,33 @@
+﻿@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<TDanhMucSp>
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg" data-setbg="@Url.Content("../ProductImages/" + item.AnhDaiDien)"
+                         style="background-image: url(&quot;img/featured/feature-1.jpg&quot;);">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a asp-controller="Home" asp-action="Details" asp-route-productCode="@item.MaSp">@item.TenSp</a></h6>
+                        <h5>@item.GiaNhoNhat</h5>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="product__pagination">
+        @Html.PagedListPager(Model, page => Url.Action("ProductsByType", new { productType = ViewBag.ProductType, page = page }))
+    </div>
+</div>

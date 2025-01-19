@@ -1,0 +1,92 @@
+﻿@using Migroup2.Models
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Core
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model X.PagedList.IPagedList<TDanhMucSp>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $('#tempMessage').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+}
+
+<h1>Danh mục sản phẩm</h1>
+<p>
+    <a asp-action="Add" class="btn btn-danger">
+        Thêm mới sản phẩm
+    </a>
+</p>
+<p id="tempMessage" class="alert alert-success" style="display: @(TempData["Message"] != null ? "block" : "none");">
+    @TempData["Message"]
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Tên sản phẩm
+            </th>
+            <th>
+                Thời gian bảo hành
+            </th>
+            <th>
+                Giá nhỏ nhất
+            </th>
+            <th>
+                Giá lớn nhất
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 0;
+        }
+        @foreach (var item in Model) {
+            i += 1;
+            string @toggleClass = "table-success";
+            if(i % 2 == 0)
+            {
+                toggleClass = "table-primary";
+            }
+            <tr class="@toggleClass">
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenSp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ThoiGianBaoHanh)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GiaNhoNhat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GiaLonNhat)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-productCode="@item.MaSp" class="btn-icon text-primary">
+                        <i class="fas fa-edit"></i>
+                    </a> | 
+                    <a asp-action="Delete" asp-route-productCode="@item.MaSp" class="btn-icon text-danger">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="product__pagination">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page, searchQuery = ViewBag.SearchQuery }),
+    new PagedListRenderOptions()
+    {
+        LiElementClasses = new List<String> {"page-item"},
+        PageClasses = new List<String> {"page-link"}
+    })
+</div>
